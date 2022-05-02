@@ -273,12 +273,16 @@ $(window).on("load", function () {
   });
 });
 
-// Slider
+// // Slider
 $(document).ready(function () {
-  var owl = $(".header .owl-carousel");
+  $(".owl-carousel").on("initialized.owl.carousel", () => {
+    setTimeout(() => {
+      $(".owl-item.active .owl-slide-animated").addClass("is-transitioned");
+      $("section").show();
+    }, 200);
+  });
 
-  // Slider owlCarousel
-  $(".slider .owl-carousel").owlCarousel({
+  const $owlCarousel = $(".owl-carousel").owlCarousel({
     items: 1,
     loop: true,
     margin: 0,
@@ -286,67 +290,114 @@ $(document).ready(function () {
     smartSpeed: 500,
   });
 
-  // Slider owlCarousel
-  $(".slider-fade .owl-carousel").owlCarousel({
-    items: 1,
-    loop: true,
-    margin: 0,
-    autoplay: true,
-    smartSpeed: 500,
-    animateOut: "fadeOut",
+  $owlCarousel.on("changed.owl.carousel", (e) => {
+    $(".owl-slide-animated").removeClass("is-transitioned");
+
+    const $currentOwlItem = $(".owl-item").eq(e.item.index);
+    $currentOwlItem.find(".owl-slide-animated").addClass("is-transitioned");
+
+    const $target = $currentOwlItem.find(".owl-slide-text");
+    doDotsCalculations($target);
   });
 
-  owl.on("changed.owl.carousel", function (event) {
-    var item = event.item.index - 2; // Position of the current item
-    $("h4").removeClass("animated fadeInDown fadeInLeft");
-    $("h1").removeClass("animated fadeInUp fadeInRight");
-    $(".slider-line").removeClass("animated zoomIn");
-    $("p").removeClass("animated fadeInDown fadeInUp");
-    $(".butn").removeClass("animated zoomIn");
-
-    $(".owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("h4")
-      .addClass("animated fadeInLeft");
-    $(".owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("h1")
-      .addClass("animated fadeInRight");
-    $(".owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("p")
-      .addClass("animated fadeInUp");
-
-    $(".agency .owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("h4")
-      .addClass("animated fadeInDown");
-    $(".agency .owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("h1")
-      .addClass("animated fadeInUp");
-    $(".agency .owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find(".slider-line")
-      .addClass("animated zoomIn");
-    $(".agency .owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find("p")
-      .addClass("animated fadeInDown");
-    $(".owl-item")
-      .not(".cloned")
-      .eq(item)
-      .find(".butn")
-      .addClass("animated zoomIn");
+  $owlCarousel.on("resize.owl.carousel", () => {
+    setTimeout(() => {
+      setOwlDotsPosition();
+    }, 50);
   });
+
+  setOwlDotsPosition();
+
+  function setOwlDotsPosition() {
+    const $target = $(".owl-item.active .owl-slide-text");
+    doDotsCalculations($target);
+  }
+
+  function doDotsCalculations(el) {
+    const height = el.height();
+    const { top, left } = el.position();
+    const res = height + top + 20;
+
+    $(".owl-carousel .owl-dots").css({
+      top: `${res}px`,
+      left: `${left}px`,
+    });
+  }
 });
+
+// $(document).ready(function () {
+//   var owl = $(".header .owl-carousel");
+
+//   // Slider owlCarousel
+//   $(".slider .owl-carousel").owlCarousel({
+//     items: 1,
+//     loop: true,
+//     margin: 0,
+//     autoplay: true,
+//     smartSpeed: 500,
+//   });
+
+//   // Slider owlCarousel
+//   $(".slider-fade .owl-carousel").owlCarousel({
+//     items: 1,
+//     loop: true,
+//     margin: 0,
+//     autoplay: true,
+//     smartSpeed: 500,
+//     animateOut: "fadeOut",
+//   });
+
+//   owl.on("changed.owl.carousel", function (event) {
+//     var item = event.item.index - 2; // Position of the current item
+//     $("h4").removeClass("animated fadeInDown fadeInLeft");
+//     $("h1").removeClass("animated fadeInUp fadeInRight");
+//     $(".slider-line").removeClass("animated zoomIn");
+//     $("p").removeClass("animated fadeInDown fadeInUp");
+//     $(".butn").removeClass("animated zoomIn");
+
+//     $(".owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("h4")
+//       .addClass("animated fadeInLeft");
+//     $(".owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("h1")
+//       .addClass("animated fadeInRight");
+//     $(".owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("p")
+//       .addClass("animated fadeInUp");
+
+//     $(".agency .owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("h4")
+//       .addClass("animated fadeInDown");
+//     $(".agency .owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("h1")
+//       .addClass("animated fadeInUp");
+//     $(".agency .owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find(".slider-line")
+//       .addClass("animated zoomIn");
+//     $(".agency .owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find("p")
+//       .addClass("animated fadeInDown");
+//     $(".owl-item")
+//       .not(".cloned")
+//       .eq(item)
+//       .find(".butn")
+//       .addClass("animated zoomIn");
+//   });
+// });
 
 // Nav to other pages
 jQuery(document).ready(function ($) {
