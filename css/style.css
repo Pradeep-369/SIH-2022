@@ -536,7 +536,11 @@ a:hover {
   z-index: 100;
 }
 .logo > img {
-  background: radial-gradient(#fff 0% 20%, transparent 20%);
+  background: radial-gradient(
+    #fff 0%,
+    rgba(255, 255, 255, 0.11) 40%,
+    transparent 40%
+  );
 }
 
 /* ----------------------------------------------------------------
